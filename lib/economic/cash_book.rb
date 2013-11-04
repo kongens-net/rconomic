@@ -24,6 +24,12 @@ module Economic
       response[:number].to_i
     end
 
+    def get_next_voucher_number
+      response = request(:get_next_voucher_number, {
+          "cashBookHandle" => handle.to_hash
+      })
+    end
+
     protected
 
     def build_soap_data

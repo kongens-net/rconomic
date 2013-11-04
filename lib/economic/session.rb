@@ -1,25 +1,33 @@
 module Economic
   class Session
-    attr_accessor :agreement_number, :user_name, :password
+    attr_accessor :agreement_number, :user_name, :password #used for old authentication
+    attr_accessor :app_token, :token #used for token authentication
+    attr_accessor :authentication_method #determines which authentication method to use
 
-    def initialize(agreement_number, user_name, password)
-      self.agreement_number = agreement_number
-      self.user_name = user_name
-      self.password = password
+    def initialize(*args)
+      args.flatten!
+      if args.size == 3
+      	self.agreement_number, self.user_name, self.password = args
+      	self.authentication_method = :connect_with_username
+      elsif args.size == 2
+        self.app_token, self.token = args
+        self.authentication_method = :connect_with_token
+      else
+        raise ArgumentError.new("Wrong number of arguments (#{args.size} for 2 or 3)")
+      end
+    end
+
+    def self.connect(*args)
+      e = new(args)
+      e.connect
+      e
     end
 
     # Authenticates with e-conomic
     def connect
-      client.http.headers.delete("Cookie")
-      response = client.request :economic, :connect do
-        soap.body = {
-          :agreementNumber => self.agreement_number,
-          :userName => self.user_name,
-          :password => self.password
-        }
-      end
-
-      @cookie = response.http.headers["Set-Cookie"]
+      response = self.send authentication_method
+      @cookies = response.http.cookies
+      response
     end
 
     # Provides access to the DebtorContacts
@@ -72,12 +80,12 @@ module Economic
     end
 
     # Requests an action from the API endpoint
-    def request(action, data = nil)
-      client.http.headers["Cookie"]  = @cookie
+    def request(action, message = nil)
+      data = {:cookies => @cookies}
+      data[:message] = message if message
 
-      response = client.request(:economic, action) do
-        soap.body = data if data
-      end
+      response = client.call(action, data)
+
       response_hash = response.to_hash
 
       response_key = "#{action}_response".intern
@@ -99,9 +107,23 @@ module Economic
     # Returns the Savon::Client used to connect to e-conomic
     # Cached on class-level to avoid loading the big wsdl file more than once (can take several hunder megabytes of ram after a while...)
     def client
-      @@client ||= Savon::Client.new do
-        wsdl.document = File.expand_path(File.join(File.dirname(__FILE__), "economic.wsdl"))
-      end
+      @@client ||= Savon.client(:wsdl => File.expand_path(File.join(File.dirname(__FILE__), "economic.wsdl")))
+    end
+
+    def connect_with_username
+      client.call :connect, :message => {
+          :agreementNumber => self.agreement_number,
+          :userName => self.user_name,
+          :password => self.password
+        }
+    end
+
+    # Authenticates with e-conomic using token
+    def connect_with_token
+      client.call :connect_with_token, :message => {
+          :appToken => self.app_token,
+          :token => self.token
+        }
     end
   end
 end

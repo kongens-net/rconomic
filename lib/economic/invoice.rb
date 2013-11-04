@@ -2,7 +2,7 @@ require 'economic/entity'
 
 module Economic
   class Invoice < Entity
-    has_properties :number, :net_amount, :vat_amount, :due_date, :debtor_handle, :debtor_name, :debtor_name, :debtor_address, :debtor_postal_code, :debtor_city, :debtor_country, :debtor_ean, :attention_handle, :heading
+    has_properties :delivery_date, :deduction_amount, :date, :order_number, :remainder_default_currency, :gross_amount, :rounding_amount, :debtor_county, :is_vat_included, :remainder, :net_amount_default_currency, :number, :net_amount, :vat_amount, :due_date, :currency_handle, :debtor_handle, :debtor_name, :debtor_name, :debtor_address, :debtor_postal_code, :debtor_city, :debtor_country, :debtor_ean, :attention_handle, :heading
 
     def attention
       return nil if attention_handle.nil?
@@ -34,10 +34,20 @@ module Economic
       @debtor_handle = handle
     end
 
-    def remainder
-      request(:get_remainder, {
-        "invoiceHandle" => handle.to_hash
-      })
+    def currency
+      return nil if currency_handle.nil?
+      @currency ||= currency_handle[:code]
+    end
+
+    def currency=(currency)
+      currency = {:code => currency} if currency.is_a?(String)
+      self.currency_handle = currency
+      @currency = currency[:code]
+    end
+
+    def currency_handle=(handle)
+      @currency = nil unless handle == @currency_handle
+      @currency_handle = handle
     end
 
     # Returns the PDF version of Invoice as a String.

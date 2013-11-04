@@ -107,7 +107,7 @@ module Economic
       data['StartDate'] = start_date
       data['EndDate'] = end_date
       data['EmployeeHandle'] = { 'Number' => employee_handle[:number] } unless employee_handle.blank?
-
+      data[:order!] = ["Handle", "Id1", "Id2", "Type", "CashBookHandle", "DebtorHandle", "CreditorHandle", "AccountHandle", "ContraAccountHandle", "Date", "VoucherNumber", "Text", "AmountDefaultCurrency", "CurrencyHandle", "Amount", "VatAccountHandle", "ContraVatAccountHandle", "DebtorInvoiceNumber", "CreditorInvoiceNumber", "DueDate", "DepartmentHandle", "DistributionKeyHandle", "ProjectHandle", "CostTypeHandle", "BankPaymentTypeHandle", "BankPaymentCreditorId", "BankPaymentCreditorInvoiceId", "CapitaliseHandle", "StartDate", "EndDate", "EmployeeHandle"].select{|k| data.keys.include?(k) }
       return data
     end
   end

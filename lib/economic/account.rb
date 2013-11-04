@@ -6,7 +6,7 @@ module Economic
     
     
     def handle
-      Handle.build({:name => @name})
+      Handle.build({:number => @number})
     end
     
     
@@ -15,7 +15,7 @@ module Economic
     def build_soap_data
       {
         'Handle' => handle.to_hash,
-        'Name' => handle.number,
+        'Name' => name,
         'Number' => number
       }
     end
