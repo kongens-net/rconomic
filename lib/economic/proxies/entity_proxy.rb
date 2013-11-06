@@ -104,6 +104,18 @@ module Economic
       session.request(entity_class.soap_action_name(action), data)
     end
 
+    def reset_items
+      @items = []
+    end
+
+    def save
+      response = request(:create_from_data_array, {
+        'dataArray' => {"#{entity_class_name}Data" => items.collect{|item| item.send(:build_soap_data)}}
+      })
+
+      return response
+    end
+
   protected
 
     def items
