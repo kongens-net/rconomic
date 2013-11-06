@@ -113,6 +113,18 @@ module Economic
         'dataArray' => {"#{entity_class_name}Data" => items.collect{|item| item.send(:build_soap_data)}}
       })
 
+      if response
+        response["#{entity_class.key}_handle".to_sym].each_with_index do |handle, index|
+          item[index].instance_variable_set :@number => handle[:number]
+          item[index].instance_variable_set :@id => handle[:id]
+          item[index].instance_variable_set :@id1 => handle[:id1]
+          item[index].instance_variable_set :@id2 => handle[:id2]
+
+          item[index].instance_variable_set :@persisted => true
+          item[index].instance_variable_set :@partial => false
+        end
+      end
+
       return response
     end
 
