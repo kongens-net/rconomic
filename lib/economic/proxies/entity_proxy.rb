@@ -117,13 +117,13 @@ module Economic
         puts "saving from #{entity_class.key}_handle"
         response["#{entity_class.key}_handle".to_sym].each_with_index do |h, index|
           puts index
-          items[index].instance_variable_set :@number => h[:number]
-          items[index].instance_variable_set :@id => h[:id]
-          items[index].instance_variable_set :@id1 => h[:id1]
-          items[index].instance_variable_set :@id2 => h[:id2]
+          items[index].instance_variable_set :@number, h[:number]
+          items[index].instance_variable_set :@id, h[:id]
+          items[index].instance_variable_set :@id1, h[:id1]
+          items[index].instance_variable_set :@id2, h[:id2]
 
-          items[index].instance_variable_set :@persisted => true
-          items[index].instance_variable_set :@partial => false
+          items[index].instance_variable_set :@persisted, true
+          items[index].instance_variable_set :@partial, false
         end
       end
 
