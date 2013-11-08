@@ -114,9 +114,7 @@ module Economic
       })
 
       if response
-        puts "saving from #{entity_class.key}_handle"
         response["#{entity_class.key}_handle".to_sym].each_with_index do |h, index|
-          puts index
           items[index].instance_variable_set :@number, h[:number]
           items[index].instance_variable_set :@id, h[:id]
           items[index].instance_variable_set :@id1, h[:id1]
