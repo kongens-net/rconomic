@@ -84,7 +84,7 @@ module Economic
       data['DebtorHandle'] = { 'Number' => debtor_handle[:number] } unless debtor_handle.blank?
       data['CreditorHandle'] = { 'Number' => creditor_handle[:number] } unless creditor_handle.blank?
       data['AccountHandle'] = { 'Number' => account_handle[:number] } unless account_handle.blank?
-      data['ContraAccountHandle'] = { 'Number' => contra_account_handle[:number] } unless contra_account_handle.blank?
+      data['ContraAccountHandle'] = { 'VatCode' => contra_account_handle[:vat_code] } unless contra_account_handle.blank?
       data['Date'] = date
       data['VoucherNumber'] = voucher_number
       data['Text'] = text
