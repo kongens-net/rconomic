@@ -1,6 +1,6 @@
 class Economic::Entity
   class Handle
-    attr_accessor :id, :id1, :id2, :number, :serial_number
+    attr_accessor :id, :id1, :id2, :number, :serial_number, :vat_code
 
     def self.build(options)
       return options if options.is_a?(Handle)
@@ -24,6 +24,7 @@ class Economic::Entity
       @id2 = hash[:id2].to_i if hash[:id2]
       @number = hash[:number].to_i if hash[:number]
       @serial_number = hash[:serial_number].to_i if hash[:serial_number]
+      @vat_code = hash[:vat_code] if hash[:vat_code]
     end
 
     def to_hash(only_keys = id_properties.keys)
@@ -34,11 +35,12 @@ class Economic::Entity
       hash['Id2'] = id2 unless id2.blank? if only_keys.include?(:id2)
       hash['Number'] = number unless number.blank? if only_keys.include?(:number)
       hash['SerialNumber'] = serial_number unless serial_number.blank? if only_keys.include?(:serial_number)
+      hash['VatCode'] = vat_code unless vat_code.blank? if only_keys.include?(:vat_code)
       hash
     end
 
     def [](key)
-      {:id => @id, :id1 => @id1, :id2 => @id2, :number => @number, :serial_number => @serial_number}[key]
+      {:id => @id, :id1 => @id1, :id2 => @id2, :number => @number, :serial_number => @serial_number, :vat_code => @vat_code}[key]
     end
 
     def ==(other)
@@ -46,13 +48,13 @@ class Economic::Entity
       return false if other.nil?
       return false if empty? || (other.respond_to?(:empty?) && other.empty?)
       return false unless other.respond_to?(:id) && other.respond_to?(:number)
-      self.id == other.id && self.number == other.number && self.id1 == other.id1 && self.id2 == other.id2
+      self.id == other.id && self.number == other.number && self.id1 == other.id1 && self.id2 == other.id2 && self.vat_code == other.vat_code
     end
 
   private
 
     def id_properties
-      {:id => 'Id', :id1 => 'Id1', :id2 => 'Id2', :number => 'Number', :serial_number => 'SerialNumber'}
+      {:id => 'Id', :id1 => 'Id1', :id2 => 'Id2', :number => 'Number', :serial_number => 'SerialNumber', :vat_code => 'VatCode'}
     end
 
     # Raises exceptions if hash doesn't contain values we can use to construct a new handle

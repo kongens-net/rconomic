@@ -67,6 +67,10 @@ module Economic
       @accounts ||= AccountProxy.new(self)
     end
 
+    def vat_accounts
+      @vat_accounts ||= VatAccountProxy.new(self)
+    end
+
     def debtor_entries
       @debtor_entries ||= DebtorEntryProxy.new(self)
     end
