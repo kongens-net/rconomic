@@ -3,6 +3,7 @@ module Economic
     attr_accessor :agreement_number, :user_name, :password #used for old authentication
     attr_accessor :app_token, :token #used for token authentication
     attr_accessor :authentication_method #determines which authentication method to use
+    attr_accessor :logger #used to overwrite Savon logger
 
     def initialize(*args)
       args.flatten!
