@@ -112,7 +112,7 @@ module Economic
     # Returns the Savon::Client used to connect to e-conomic
     # Cached on class-level to avoid loading the big wsdl file more than once (can take several hunder megabytes of ram after a while...)
     def client
-      @@client ||= Savon.client(:wsdl => File.expand_path(File.join(File.dirname(__FILE__), "economic.wsdl")))
+      @@client ||= Savon.client(:wsdl => File.expand_path(File.join(File.dirname(__FILE__), "economic.wsdl")), :logger => self.logger ? self.logger : Logger)
     end
 
     def connect_with_username
