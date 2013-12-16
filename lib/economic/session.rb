@@ -3,7 +3,6 @@ module Economic
     attr_accessor :agreement_number, :user_name, :password #used for old authentication
     attr_accessor :app_token, :token #used for token authentication
     attr_accessor :authentication_method #determines which authentication method to use
-    attr_accessor :logger #used to overwrite Savon logger
 
     def initialize(*args)
       args.flatten!
@@ -112,7 +111,7 @@ module Economic
     # Returns the Savon::Client used to connect to e-conomic
     # Cached on class-level to avoid loading the big wsdl file more than once (can take several hunder megabytes of ram after a while...)
     def client
-      @@client ||= Savon.client(:wsdl => File.expand_path(File.join(File.dirname(__FILE__), "economic.wsdl")), :logger => self.logger ? self.logger : Logger)
+      @@client ||= Savon.client(:wsdl => File.expand_path(File.join(File.dirname(__FILE__), "economic.wsdl")))
     end
 
     def connect_with_username
